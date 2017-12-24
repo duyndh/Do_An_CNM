@@ -1,0 +1,39 @@
+<script src="javascripts/jquery-1.10.2.js"></script>
+<script src="javascripts/bootstrap.min.js"></script>
+<script src="javascripts/my-script.js"></script>
+<!-- Bootstrap -->
+<link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+<link href="/stylesheets/style.css" rel="stylesheet">
+
+<div class="register-page">
+  <div class="form">
+    {{#if hasErrors}}
+        <div class="alert alert-danger">
+          {{# each messages}}
+            <p>{{this}}</p>
+          {{/each}}
+        </div>
+    {{/if}}
+    <form action="/user/signup" method="post">
+
+      <!--  <div class="form-group">
+         <label for="user">User Name</label>
+         <input type="text" id="user" name="user" value="" class="form-control">
+            </div> -->
+
+      <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" id="email" name="email" value="" class="form-control">
+      </div>
+
+      <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" value="" class="form-control">
+      </div>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+    </form>
+
+  </div>
+</div>
