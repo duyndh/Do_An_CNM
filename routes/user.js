@@ -14,6 +14,11 @@ router.get('/logout',isLoggedIn, function(req, res,next){
   res.redirect('/');
 });
 
+router.get('/dashboard',isLoggedIn, function(req, res,next){
+  res.render('dashboard/dashboard',{ layout: false });
+
+});
+
 router.use('/', notLoggedIn, function(req, res, next){
     next();
 });
