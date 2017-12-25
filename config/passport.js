@@ -18,8 +18,9 @@ passport.use('local.signup', new LocalStrategy({
     passReqToCallback: true
 }, function(req,email, password,done){
   req.checkBody('email','Invalid email').notEmpty().isEmail();
-  req.checkBody('password','Invalid password').notEmpty().isLength({min:4});
+  req.checkBody('password','Invalid password').notEmpty().isLength({min:6});
   var errors = req.validationErrors();
+  var name = req.body.name;
   if(errors) {
     var messages= [];
     errors.forEach(function(error){
@@ -35,6 +36,7 @@ passport.use('local.signup', new LocalStrategy({
           return done(null, false, {message: 'email to already to use'});
         }
         var newUser = new User();
+        newUser.name = name;
         newUser.email = email;
         newUser.password = newUser.encryptPassword(password);
         newUser.save(function(err, result){
@@ -61,7 +63,7 @@ passport.use('local.signin', new LocalStrategy({
     errors.forEach(function(error){
         messages.push(error.msg);
     });
-    return done(null, false, req.flash('error', messages));
+    return done(null, false, req.flash('Error!', messages));
   }
 
   User.findOne({'email':email}, function(err,user){
@@ -69,10 +71,10 @@ passport.use('local.signin', new LocalStrategy({
       return done(err);
     }
     if(!user){
-      return done(null, false, {message: 'dont find to user'});
+      return done(null, false, {message: 'User not found!'});
     }
     if(!user.validPassword(password)){
-      return done(null, false, {message: 'wrong password'});
+      return done(null, false, {message: 'Password is incorrect!'});
     }
 
     return done(null, user);

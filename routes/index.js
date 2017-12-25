@@ -4,7 +4,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+  res.redirect('/user/signin');
 });
 
 /*router.get('/user/signup', function(req,res,next){
