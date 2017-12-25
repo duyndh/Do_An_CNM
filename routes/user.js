@@ -15,8 +15,7 @@ router.get('/logout',isLoggedIn, function(req, res,next){
 });
 
 router.get('/dashboard',isLoggedIn, function(req, res,next){
-  res.render('dashboard/dashboard',{ layout: false });
-
+  res.render('dashboard/dashboard',{ layout: false,username:req.user.name });
 });
 
 router.use('/', notLoggedIn, function(req, res, next){
@@ -30,11 +29,11 @@ router.use('/', notLoggedIn, function(req, res, next){
 
 router.get('/signup', function(req,res,next){
 	var messages = req.flash('error');
-	res.render('user/signup',{csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length >0});
+	res.render('user/signup',{csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length >0 });
 });
 
 router.post('/signup',passport.authenticate('local.signup',{
-		successRedirect:  '/user/profile',
+		successRedirect:  '/user/dashboard',
 		failureRedirect:   '/user/signup',
 		failureFlash: true
 }));
@@ -47,8 +46,8 @@ router.get('/signin',function(req,res,next){
 });
 
 router.post('/signin',passport.authenticate('local.signin',{
-		successRedirect:  '/user/profile',
-		failureRedirect:   '/user//signin',
+		successRedirect:  '/user/dashboard',
+		failureRedirect:   '/user/signin',
 		failureFlash: true
 }));
 
@@ -60,14 +59,14 @@ function isLoggedIn(req, res, next){
   if(req.isAuthenticated()){
     return next();
   }
-  res.redirect('/');
+  res.redirect('/user/signin');
 }
 
 function notLoggedIn(req, res, next){
   if(!req.isAuthenticated()){
     return next();
   }
-  res.redirect('/');
+  res.redirect('/user/signin');
 }
 
 
