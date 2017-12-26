@@ -12,7 +12,7 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
-
+var nodemailer = require('nodemailer');
 var index = require('./routes/index');
 /*var users = require('./routes/users');
 */
@@ -83,5 +83,16 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+email_transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // secure:true for port 465, secure:false for port 587
+    auth: {
+        user: 'duyychiha9@gmail.com',
+        pass: '12345677a'
+    }
+});
+
 
 module.exports = app;
