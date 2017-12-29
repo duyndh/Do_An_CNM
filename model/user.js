@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt-nodejs');
 
 
+
 var userSchema = new mongoose.Schema(
     {
         name:{type: String, required:true},
@@ -18,6 +19,9 @@ userSchema.methods.encryptPassword = function(password){
 userSchema.methods.validPassword = function(password){
     return bcrypt.compareSync(password, this.password);
 };
-
+var User = module.exports = mongoose.model('User', userSchema, 'user');
+module.exports.getUserById = function(id, callback){
+    User.findById(id, callback);
+};
 /*mongoose.model('User', StudentSchema);*/
 module.exports = mongoose.model('User',userSchema);
