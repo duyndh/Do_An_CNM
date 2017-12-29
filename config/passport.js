@@ -1,6 +1,8 @@
 var passport = require('passport');
 var User = require('../model/user');
+var Transaction = require('../model/transaction');
 const nodemailer = require('nodemailer');
+var randomstring = require("randomstring");
 
 var LocalStrategy = require('passport-local').Strategy;
 
@@ -38,10 +40,24 @@ passport.use('local.signup', new LocalStrategy({
           return done(null, false, {message: 'Email to already to use'});
         }
         var newUser = new User();
+        var newTransaction = new Transaction();
+        var address = randomstring.generate({
+          length: 64,
+          charset: 'hex'
+        });
         newUser.name = name;
         newUser.email = email;
         newUser.password = newUser.encryptPassword(password);
         newUser.is_active=0;
+        newUser.transaction_id = newTransaction._id;
+        newTransaction.address = address; 
+        newTransaction.real_money = 0;
+        newTransaction.usable_money = 0;
+        newTransaction.save(function(err,result){
+          if(err){
+            return done(err);
+          }
+        });
         newUser.save(function(err, result){
             if(err){
               return done(err);
