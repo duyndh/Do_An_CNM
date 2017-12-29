@@ -2,31 +2,33 @@ var express = require('express');
 var router = express.Router();
 var User = require('../model/user');
 
+var mongoose= require('mongoose');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.redirect('/user/signin');
 });
 router.get('/active/:id',function (req,res) {
-    console.log(req.params.id);
-   /* User.findById({_id:req.params.id},function (err,user) {
-        if (err) {
+    //console.log(req.params.id);
+
+   User.findOne({_id:req.params.id},function (err,user) {
+       if (err) {
             console.log(err);
             return;
         }
-       // console.log(_id);
-        var new_user = user;
-        new_user.is_active = true;
-        user.update(new_user, function(error){
-            if (error) {
-                console.log(error);
-                return;
-            }
 
-            req.flash("success_msg", "User activated successfully");
-            res.redirect('/user/signup');
+       var new_user = user;
+       new_user.is_active = true;
+       user.update(new_user, function(error){
+           if (error) {
+               console.log(error);
+               return;
+           }
+
+           // req.flash("success_msg", "User activated successfully");
+           res.render('user/signin');
         });
 
-    });*/
+    });
 });
 /*router.get('/user/signup', function(req,res,next){
 	var messages = req.flash('error');
