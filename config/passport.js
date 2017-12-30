@@ -94,7 +94,7 @@ passport.use('local.signup', new LocalStrategy({
             req.flash('success_msg', 'You are registered. An activation email has been send to your email. Please active your account first');
 
             //res.redirect('/signin');
-
+			/////res.json({status: 'true', message:"LOGNUP SUCCESS", data: user});
             return done(null, newUser);
         });
     });

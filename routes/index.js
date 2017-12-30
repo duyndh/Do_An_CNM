@@ -1,6 +1,6 @@
 var express = require('express');
 var passport = require('passport');
-
+var randomstring = require("randomstring");
 var router = express.Router();
 var User = require('../model/user');
 var bodyParser = require('body-parser');
@@ -42,7 +42,7 @@ router.get('/forgotpwd', function(req,res,next){
 router.post('/forgotpwd',urlencodedParser,function (req,res) {
 
     var M = req.body.email;
-    console.log(M);
+   // console.log(M);
     User.findOne({'email': M}, function (err, user) {
         if (err) {
             return done(err);
@@ -50,7 +50,7 @@ router.post('/forgotpwd',urlencodedParser,function (req,res) {
         if (!user) {
             return done(null, false, {message: 'User not found!'});
         }
-        var p = Math.floor(Math.random() * 899999) + 100000;
+        var p = randomstring.generate(6);
         var new_user = user;
         new_user.password = new_user.encryptPassword(p);
         user.update(new_user, function (error) {
