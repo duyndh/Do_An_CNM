@@ -29,7 +29,7 @@ router.get('/active/:id',function (req,res) {
            }
 
            // req.flash("success_msg", "User activated successfully");
-           res.render('user/signin');
+           res.redirect('/user/signin');
         });
 
     });
