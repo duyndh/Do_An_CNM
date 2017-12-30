@@ -7,8 +7,10 @@ var bcrypt = require('bcrypt-nodejs');
 var transactionSchema = new mongoose.Schema(
     {
         address:{type: String, required:true},
-        real_money:{type: Number, required:true},
-  		usable_money:{type:Number, required:true}
+        real_balance:{type: Number, required:true},
+          usable_balance:{type:Number, required:true},
+        private_key:{type: String, required:true},
+        public_key:{type: String, required:true}
     }
 );
 
