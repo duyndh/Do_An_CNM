@@ -46,14 +46,24 @@ passport.use('local.signup', new LocalStrategy({
           length: 64,
           charset: 'hex'
         });
+        var public_key = randomstring.generate({
+          length: 544,
+          charset: 'hex'
+        });
+        var private_key = randomstring.generate({
+          length: 1774,
+          charset: 'hex'
+        });
         newUser.name = name;
         newUser.email = email;
         newUser.password = newUser.encryptPassword(password);
         newUser.is_active=0;
         newUser.transaction_id = newTransaction._id;
         newTransaction.address = address; 
-        newTransaction.real_money = 0;
-        newTransaction.usable_money = 0;
+        newTransaction.real_balance = 0;
+        newTransaction.usable_balance = 0;
+        newTransaction.public_key = public_key;
+        newTransaction.private_key = private_key;
         newTransaction.save(function(err,result){
           if(err){
             return done(err);

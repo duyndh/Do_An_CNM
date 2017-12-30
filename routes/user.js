@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var csrf = require('csurf');
 var passport = require('passport');
+var mongoose = require('mongoose');
+var User = require('../model/user');
+var Transaction = require('../model/transaction');
+
 
 var csrfProtection = csrf();
 router.use(csrfProtection);
@@ -15,7 +19,15 @@ router.get('/logout',isLoggedIn, function(req, res,next){
 });
 
 router.get('/dashboard',isLoggedIn, function(req, res,next){
-  res.render('dashboard/dashboard',{ layout: false,username:req.user.name });
+  var id = req.user.transaction_id;
+  var user_usable_balance = 0;
+  var user_current_balance = 0;
+  var transaction = Transaction.findById(req.user.transaction_id,function(err,data){
+    user_usable_balance = data.usable_balance;
+    user_current_balance = data.real_balance;
+    res.render('dashboard/dashboard',{ layout: false,username:req.user.name,usable_balance: user_usable_balance,current_balance: user_current_balance });
+  });
+  
 });
 
 router.use('/', notLoggedIn, function(req, res, next){
