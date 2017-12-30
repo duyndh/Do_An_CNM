@@ -32,13 +32,9 @@ router.get('/signup', function(req,res,next){
 	res.render('user/signup',{csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length >0 });
 });
 
-router.get('/forgotpwd', function(req,res,next){
-	var messages = req.flash('error');
-	res.render('user/forgotpwd');
-});
 
 router.post('/signup',passport.authenticate('local.signup',{
-		successRedirect:  '/user/dashboard',
+		successRedirect:  '/user/signin',
 		failureRedirect:   '/user/signup',
 		failureFlash: true
 }));
