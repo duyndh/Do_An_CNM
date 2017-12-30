@@ -25,7 +25,7 @@ router.get('/dashboard',isLoggedIn, function(req, res,next){
   var transaction = Transaction.findById(req.user.transaction_id,function(err,data){
     user_usable_balance = data.usable_balance;
     user_current_balance = data.real_balance;
-    res.render('dashboard/dashboard',{ layout: false,username:req.user.name,usable_balance: user_usable_balance,current_balance: user_current_balance });
+    res.render('dashboard/dashboard',{ layout: false,username:req.user.name,usable_balance: user_usable_balance,current_balance: user_current_balance,transaction_address : data.address });
   });
   
 });
