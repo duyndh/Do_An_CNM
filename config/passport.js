@@ -1,4 +1,5 @@
 var passport = require('passport');
+var mongoose= require('mongoose');
 var User = require('../model/user');
 var Transaction = require('../model/transaction');
 const nodemailer = require('nodemailer');
@@ -66,17 +67,17 @@ passport.use('local.signup', new LocalStrategy({
                 var user_id = newUser.id;
             // set activation email
             var mailOptions = {
-                from: 'Car shop <duyychiha9@gmail.com>',
+                from: 'KCoin shop <duyychiha9@gmail.com>',
                 to: email, // list of receivers
                 subject: 'Activation', // Subject line
                 text: 'Hello world ?', // plain text body
-                html: '<b><a href="'+ req.headers.origin +'/active?id='+ user_id +'">Active your account</a></b>' // html body
+                html: '<b><a href="'+ req.headers.origin +'/active/'+ user_id +'">Active your account</a></b>' // html body
             };
 
 
             email_transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
-                    console.log(error);
+                  //  console.log(error);
                 }
             });
 
@@ -88,7 +89,6 @@ passport.use('local.signup', new LocalStrategy({
         });
     });
 }));
-
 
 
 passport.use('local.signin', new LocalStrategy({
@@ -111,11 +111,15 @@ passport.use('local.signin', new LocalStrategy({
     if(err){
       return done(err);
     }
-    if(!user){
-      return done(null, false, {message: 'User not found!'});
-    }
+        if(!user){
+        return done(null, false, {message: 'User not found!'});
+                }
     if(!user.validPassword(password)){
       return done(null, false, {message: 'Password is incorrect!'});
+    }
+    if(!user.is_active)
+    {
+        return done(null, false, {message: 'Account is not active'});
     }
 
     return done(null, user);
@@ -123,3 +127,4 @@ passport.use('local.signin', new LocalStrategy({
 
 
 }));
+

@@ -20,7 +20,8 @@ userSchema.methods.encryptPassword = function(password){
 userSchema.methods.validPassword = function(password){
     return bcrypt.compareSync(password, this.password);
 };
-var User = module.exports = mongoose.model('User', userSchema, 'users');
+//var User = module.exports = mongoose.model('User', userSchema, 'user');
+var User = mongoose.model('User',userSchema);
 module.exports.getUserById = function(id, callback){
     User.findById(id, callback);
 };
