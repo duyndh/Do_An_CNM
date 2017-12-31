@@ -27,17 +27,8 @@ router.get('/dashboard',isLoggedIn, function(req, res,next){
     user_current_balance = data.real_balance;
     res.render('dashboard/dashboard',{ layout: false,username:req.user.name,usable_balance: user_usable_balance,current_balance: user_current_balance,transaction_address : data.address });
   });
-  
 });
 
-router.use('/', isLoggedIn, function(req, res, next){
-    next();
-});
-
-/* GET users listing. */
-/*router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});*/
 
 router.get('/signup', function(req,res,next){
 	var messages = req.flash('error');
@@ -63,10 +54,6 @@ router.post('/signin',passport.authenticate('local.signin',{
 		failureRedirect:   '/user/signin',
 		failureFlash: true
 }));
-
-
-
-module.exports = router;
 
 function isLoggedIn(req, res, next){
   if(req.isAuthenticated()){
