@@ -1,9 +1,3 @@
-<script src="javascripts/jquery-1.10.2.js"></script>
-<script src="javascripts/bootstrap.min.js"></script>
-<script src="javascripts/my-script.js"></script>
-<!-- Bootstrap -->
-<link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
-<link href="/stylesheets/style.css" rel="stylesheet">
 
 <div class="register-page">
   <div class="form">
@@ -16,24 +10,23 @@
     {{/if}}
     <form action="/user/signup" method="post">
 
-      <!--  <div class="form-group">
-         <label for="user">User Name</label>
-         <input type="text" id="user" name="user" value="" class="form-control">
-            </div> -->
-
+      <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" class="form-control" required>
+      </div>
       <div class="form-group">
           <label for="email">Email</label>
-          <input type="text" id="email" name="email" value="" class="form-control">
+          <input type="email" id="email" name="email" value="" class="form-control" required>
       </div>
 
       <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" value="" class="form-control">
+          <input type="password" id="password" name="password" value="" class="form-control" pattern=".{6,}" title="Password must more than 6 characters" required>
       </div>
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
       <button type="submit" class="btn btn-primary">Sign Up</button>
     </form>
-    </form>
+    <span>Already has a acount? Click <a href="/user/signin">here</a> to sign in!</span>
 
   </div>
 </div>
