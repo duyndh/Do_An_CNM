@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
   res.redirect('/user/signin');
 });
 router.get('/active/:id',function (req,res) {
-    //console.log(req.params.id);
+  /*  console.log(req.params.id);*/
 
    User.findOne({_id:req.params.id},function (err,user) {
        if (err) {
@@ -27,7 +27,7 @@ router.get('/active/:id',function (req,res) {
                console.log(error);
                return;
            }
-
+           req.flash('info', 'User '+ req.user.name +' is active :)')
            // req.flash("success_msg", "User activated successfully");
            res.redirect('/user/signin');
         });

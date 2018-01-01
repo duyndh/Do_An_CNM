@@ -6,7 +6,16 @@
             <p>{{this}}</p>
           {{/each}}
         </div>
-    {{/if}}
+
+     {{else}}
+         <div class="alert">    
+            {{# each index}}
+            <p style="color: green;">{{this}}</p>
+          {{/each}}
+         
+        </div>          
+     {{/if}}
+
     <form action="/user/signin" method="post">
       <div class="form-group">
           <label for="email">Email</label>
