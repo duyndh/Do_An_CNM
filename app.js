@@ -14,6 +14,7 @@ var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
 var nodemailer = require('nodemailer');
 var index = require('./routes/index');
+var localStorage = require('localStorage');
 
 /*var users = require('./routes/users');
 */
