@@ -38,24 +38,24 @@
 
     	<div class="sidebar-wrapper">
             <div class="logo">
-                <a href="http://www.creative-tim.com" class="simple-text">
+                <a href="dashboard" class="simple-text">
                     {{username}}'s Dashboard
                 </a>
             </div>
 
             <ul class="nav">
                 <li class="active">
-                    <a href="dashboard.html">
+                    <a href="dashboard">
                         <i class="ti-panel"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li>
+                {{!-- <li>
                     <a href="user.html">
                         <i class="ti-user"></i>
                         <p>User Profile</p>
                     </a>
-                </li>
+                </li> --}}
             </ul>
     	</div>
     </div>
@@ -90,6 +90,7 @@
 
         <div class="content">
             <div class="container-fluid">
+
                 <div class="row">
                     <div class="col-lg-3 col-sm-6">
                         <div class="card">
@@ -137,12 +138,33 @@
                             </div>
                             <div class="content">
                                 <p class="category"><b>{{transaction_address}}</b></p>
+                                <form action="/user/create-transaction" method="POST">
+                                <input type="hidden" name="send_address" value="{{transaction_address}}">
+                                <div class="form-group">
+                                        <label for="ToAddress">Make a transaction</label>
+                                        <input type="text" class="form-control border-input" name="receive_address" placeholder="To address">
+                                </div>
+                                <div class="form-group">
+                                        <label for="ammount_sent">Amount</label>
+                                        <input type="number" class="form-control border-input" name="amount" placeholder="Ammount">
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-info btn-fill btn-wd">Send</button>
+                                </div>
+                                </form>
+                            </div>
+
+
                             </div>
                         </div>
                     </div>
+
                     </div>
                 </div>
+
                 </div>
+
+
             </div>
         </div>
         <footer class="footer">
