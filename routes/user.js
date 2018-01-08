@@ -36,7 +36,7 @@ router.get('/dashboard',isLoggedIn, function(req, res,next){
     if (datas.status === 0) {
       return(false);
     }
-  res.render('dashboard/dashboard',{ layout: false,username:datas.data.name,usable_balance: datas.data.usable_balance,current_balance: datas.data.current_balance,transaction_address : datas.data.address });
+  res.render('dashboard/dashboard',{ csrfToken: req.csrfToken(),layout: false,username:datas.data.name,usable_balance: datas.data.usable_balance,current_balance: datas.data.current_balance,transaction_address : datas.data.address });
   });
 
 });
@@ -69,7 +69,7 @@ router.post('/signup',function(req,res,next){
 router.get('/signin',function(req,res,next){
 	var messages = req.flash('error');
   var index = req.flash('info');
-	res.render('user/signin',{csrfToken: req.csrfToken(), messages: messages, index: index, hasErrors: messages.length >0});
+	res.render('user/signin',{csrfToken: req.csrfToken()});
 });
 
 router.post('/signin',function(req,res,next){
@@ -80,11 +80,14 @@ router.post('/signin',function(req,res,next){
   };
   request.post({url,form:data},function(err,httpResponse,body){
     var datas = JSON.parse(body);
+
     if (datas.status == 0) {
-      res.redirect('/user/signin');
+      res.render('user/signin',{csrfToken: req.csrfToken(),messages: datas.message});
       return;
     }
     localStorage.setItem('address', JSON.parse(body).data.address);
+    localStorage.setItem('balance_id', JSON.parse(body).data.balance_id);
+    localStorage.setItem('id', JSON.parse(body).data.balance_id);
     res.redirect('/user/dashboard');
     
   });
@@ -165,7 +168,7 @@ router.post('/forgotpwd',urlencodedParser,function (req,res) {
 });
 
 function isLoggedIn(req, res, next){
-  if(localStorage.getItem('address')){
+  if(localStorage.getItem('address') && localStorage.getItem('id')){
     return next();
   }
   res.redirect('/user/signin');
