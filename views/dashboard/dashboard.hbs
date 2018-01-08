@@ -140,6 +140,7 @@
                                 <p class="category"><b>{{transaction_address}}</b></p>
                                 <form action="/user/create-transaction" method="POST">
                                 <input type="hidden" name="send_address" value="{{transaction_address}}">
+                                <input type="hidden" name="_csrf" value="{{csrfToken}}">
                                 <div class="form-group">
                                         <label for="ToAddress">Make a transaction</label>
                                         <input type="text" class="form-control border-input" name="receive_address" placeholder="To address">
