@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 var urlencodedParser=bodyParser.urlencoded({extended:false});
 var bodyParser = require('body-parser');
 var csrfProtection = csrf();
+var flash = require('express-flash');
+
 router.use(csrfProtection);
 
 // router.get('/profile', function(req,res,next){
@@ -27,6 +29,9 @@ router.get('/dashboard',isLoggedIn, function(req, res,next){
   //   user_current_balance = data.real_balance;
   //   res.render('dashboard/dashboard',{ layout: false,username:req.user.name,usable_balance: user_usable_balance,current_balance: user_current_balance,transaction_address : data.address });
   // });
+
+
+
   var url  = 'http://localhost:8000/kcoin-api/user-dashboard';
   var data = {
     balance_address: localStorage.getItem('address')
@@ -36,7 +41,8 @@ router.get('/dashboard',isLoggedIn, function(req, res,next){
     if (datas.status === 0) {
       return(false);
     }
-  res.render('dashboard/dashboard',{ csrfToken: req.csrfToken(),layout: false,username:datas.data.name,usable_balance: datas.data.usable_balance,current_balance: datas.data.current_balance,transaction_address : datas.data.address });
+
+      res.render('dashboard/dashboard',{ csrfToken: req.csrfToken(),layout: false,username:datas.data.name,usable_balance: datas.data.usable_balance,current_balance: datas.data.current_balance,transaction_address : datas.data.address});
   });
 
 });
@@ -44,7 +50,7 @@ router.get('/dashboard',isLoggedIn, function(req, res,next){
 
 router.get('/signup', function(req,res,next){
 	var messages = req.flash('error');
-	res.render('user/signup',{csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length >0 });
+	res.render('user/signup',{csrfToken: req.csrfToken()});
 });
 
 
@@ -67,8 +73,6 @@ router.post('/signup',function(req,res,next){
 
 
 router.get('/signin',function(req,res,next){
-	var messages = req.flash('error');
-  var index = req.flash('info');
 	res.render('user/signin',{csrfToken: req.csrfToken()});
 });
 
@@ -80,9 +84,9 @@ router.post('/signin',function(req,res,next){
   };
   request.post({url,form:data},function(err,httpResponse,body){
     var datas = JSON.parse(body);
-
+    console.log(datas);
     if (datas.status == 0) {
-      res.render('user/signin',{csrfToken: req.csrfToken(),messages: datas.message});
+      res.render('user/signin',{csrfToken: req.csrfToken()});
       return;
     }
     localStorage.setItem('address', JSON.parse(body).data.address);
@@ -93,7 +97,7 @@ router.post('/signin',function(req,res,next){
   });
 });
 
-router.post('/create-transaction',function(req,res,next){
+router.post('/dashboard',function(req,res,next){
   var url  = 'http://localhost:8000/kcoin-api/create-transaction';
   var data = {
     send_address:req.body.send_address,
@@ -102,7 +106,12 @@ router.post('/create-transaction',function(req,res,next){
   };
   request.post({url,form:data},function(err,httpResponse,body){
     var datas = JSON.parse(body);
+    console.log(datas);
     if (datas.status == 0) {
+      req.session.sessionFlash = {
+        type: 'danger',
+        message: datas.message
+    }
       res.redirect('/user/dashboard');
       return;
     }
@@ -113,47 +122,11 @@ router.post('/create-transaction',function(req,res,next){
 
 
 router.get('/forgotpwd', function(req,res,next){
-  var messages = req.flash('error');
+  
   res.render('user/forgotpwd');
 });
 router.post('/forgotpwd',urlencodedParser,function (req,res) {
 
-//     var M = req.body.email;
-//    // console.log(M);
-//     User.findOne({'email': M}, function (err, user) {
-//         if (err) {
-//             return done(err);
-//         }
-//         if (!user) {
-//             return done(null, false, {message: 'User not found!'});
-//         }
-//         var p = randomstring.generate(6);
-//         var new_user = user;
-//         new_user.password = new_user.encryptPassword(p);
-//         user.update(new_user, function (error) {
-//             if (error) {
-//                 console.log(error);
-//                 return;
-//             }
-
-
-//             var mailOptions = {
-//                 from: 'KCoin shop <duyychiha9@gmail.com>',
-//                 to: M, // list of receivers
-//                 subject: 'Forgotpassword', // Subject line
-//                 text: 'Your new-password ' + p// plain text body
-
-//             };
-
-
-//             email_transporter.sendMail(mailOptions, function (error, info) {
-//                 if (error) {
-//                     //  console.log(error);
-//                 }
-//             });
-//             res.redirect('user/signin');
-//         });
-//     });
   var url  = 'http://localhost:8000/kcoin-api/forgotpwd';
   var data = {
   email:req.body.email
@@ -161,6 +134,10 @@ router.post('/forgotpwd',urlencodedParser,function (req,res) {
   request.post({url,form:data},function(err,httpResponse,body){
       var datas = JSON.parse(body);
   if (datas.status === 0) {
+    req.session.sessionFlash = {
+      type: 'danger',
+      message: datas.message
+  }
       res.redirect('/user/forgotpwd');
   }
   res.redirect('/user/signin');
