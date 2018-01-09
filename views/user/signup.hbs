@@ -1,9 +1,11 @@
 
 <div class="register-page">
   <div class="form">
-    {{#if messages}}
-    <div class="alert alert-danger">{{messages}}</div>
-    {{/if}}  
+    {{#if sessionFlash.message}}
+    <div class="alert alert-{{ sessionFlash.type }}">
+        {{ sessionFlash.message }}
+    </div>
+{{/if}}
     <form action="/user/signup" method="post">
 
       <div class="form-group">
