@@ -1,13 +1,9 @@
 
 <div class="register-page">
   <div class="form">
-    {{#if hasErrors}}
-        <div class="alert alert-danger">
-          {{# each messages}}
-            <p>{{this}}</p>
-          {{/each}}
-        </div>
-    {{/if}}
+    {{#if messages}}
+    <div class="alert alert-danger">{{messages}}</div>
+    {{/if}}  
     <form action="/user/signup" method="post">
 
       <div class="form-group">

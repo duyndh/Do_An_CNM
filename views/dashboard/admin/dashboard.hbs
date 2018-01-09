@@ -39,7 +39,7 @@
     	<div class="sidebar-wrapper">
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text">
-                    {{username}}'s Dashboard
+                    Admin Dashboard
                 </a>
             </div>
 
@@ -70,7 +70,6 @@
                         <span class="icon-bar bar2"></span>
                         <span class="icon-bar bar3"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Have a nice day <i class="ti-face-smile"></i></a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -98,13 +97,13 @@
                                 <div class="row">
                                     <div class="col-xs-5">
                                         <div class="icon-big icon-warning text-center">
-                                            <i class="ti-credit-card"></i>
+                                            <i class="ti-user"></i>
                                         </div>
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
-                                            <p>Usable Balance</p>
-                                            ${{usable_balance}}
+                                            <p>Number of user:</p>
+                                            {{number_of_user}}
                                         </div>
                                     </div>
                                 </div>
@@ -122,44 +121,32 @@
                                     </div>
                                     <div class="col-xs-7">
                                         <div class="numbers">
-                                            <p>Current Balance</p>
-                                            ${{current_balance}}
+                                            <p>Current System Balance:</p>
+                                            ${{current_system_balance}}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-lg-3 col-sm-6">
                         <div class="card">
-                            <div class="header">
-                                <h4 class="title">Your Transaction Address:</h4>
-                            </div>
                             <div class="content">
-                                <p class="category"><b>{{transaction_address}}</b></p>
-                                <form action="/user/create-transaction" method="POST">
-                                <input type="hidden" name="send_address" value="{{transaction_address}}">
-                                <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                                <div class="form-group">
-                                        <label for="ToAddress">Make a transaction</label>
-                                        <input type="text" class="form-control border-input" name="receive_address" placeholder="To address">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <div class="icon-big icon-success text-center">
+                                            <i class="ti-archive"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <div class="numbers">
+                                            <p>Current System Usable balance:</p>
+                                            ${{current_system_usable}}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                        <label for="ammount_sent">Amount</label>
-                                        <input type="number" class="form-control border-input" name="amount" placeholder="Ammount">
-                                </div>
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-info btn-fill btn-wd">Send</button>
-                                </div>
-                                </form>
-                            </div>
-
-
                             </div>
                         </div>
-                    </div>
-
                     </div>
                 </div>
 
@@ -202,19 +189,6 @@
 	<script src="/javascripts/demo.js"></script>
 
 	<script type="text/javascript">
-    	$(document).ready(function(){
 
-        	demo.initChartist();
-
-        	$.notify({
-            	icon: 'ti-heart',
-            	message: "Hi, <b>{{username}}</b>"
-
-            },{
-                type: 'success',
-                timer: 4000
-            });
-
-    	});
 	</script>
 </html>

@@ -1,22 +1,13 @@
 <div class="login-page">
   <div class="form">
-    {{#if hasErrors}}
-        <div class="alert alert-danger">
-          {{# each messages}}
-            <p>{{this}}</p>
-          {{/each}}
-        </div>
 
-     {{else}}
-         <div class="alert">    
-            {{# each index}}
-            <p style="color: green;">{{this}}</p>
-          {{/each}}
-         
-        </div>          
-     {{/if}}
+    {{#if messages}}
+    <div class="alert alert-danger">{{messages}}</div>
+    {{/if}}  
+
 
     <form action="/user/signin" method="post">
+
       <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" value="" class="form-control" required>
