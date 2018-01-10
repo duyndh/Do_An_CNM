@@ -24,7 +24,7 @@ router.get('/logout',isLoggedIn, function(req, res,next){
 
 router.get('/dashboard',isLoggedIn, function(req, res,next){
 
-  var url  = 'http://localhost:8000/kcoin-api/user-dashboard';
+  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/user-dashboard';
   var data = {
     balance_address: localStorage.getItem('address')
   };
@@ -48,7 +48,7 @@ router.get('/signup', function(req,res,next){
 
 
 router.post('/signup',function(req,res,next){
-  var url  = 'http://localhost:8000/kcoin-api/register';
+  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/register';
   var data = {
     email:req.body.email,
     name:req.body.name,
@@ -70,7 +70,7 @@ router.get('/signin',function(req,res,next){
 });
 
 router.post('/signin',function(req,res,next){
-  var url  = 'http://localhost:8000/kcoin-api/signin';
+  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/signin';
   var data = {
     email:req.body.email,
     password:req.body.password
@@ -90,7 +90,7 @@ router.post('/signin',function(req,res,next){
 });
 
 router.post('/dashboard',function(req,res,next){
-  var url  = 'http://localhost:8000/kcoin-api/create-transaction';
+  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/create-transaction';
   var data = {
     send_address:req.body.send_address,
     receive_address:req.body.receive_address,
@@ -114,7 +114,7 @@ router.post('/dashboard',function(req,res,next){
 
 router.get('/transactions',isLoggedIn, function(req,res,next){
   
-  var url  = 'http://localhost:8000/kcoin-api/gettrans';
+  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/gettrans';
   var data = {
   address : localStorage.getItem('address'),
   transaction_id : req.body.transaction_id,
@@ -142,7 +142,7 @@ router.get('/forgotpwd', function(req,res,next){
 });
 router.post('/forgotpwd',urlencodedParser,function (req,res) {
 
-  var url  = 'http://localhost:8000/kcoin-api/forgotpwd';
+  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/forgotpwd';
   var data = {
   email:req.body.email
   };
@@ -161,7 +161,7 @@ router.post('/forgotpwd',urlencodedParser,function (req,res) {
 
 router.post('/confirm',function (req,res) {
 
-  var url  = 'http://localhost:8000/kcoin-api/confirm-transaction';
+  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/confirm-transaction';
   var data = {
   email:req.body.email
   };
