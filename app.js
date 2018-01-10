@@ -9,19 +9,20 @@ var mongoose = require('mongoose');
 var methodOverride = require('method-override');
 var session = require('express-session');
 var passport = require('passport');
-var flash = require('connect-flash');
+var flash = require('express-flash');
 var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
 var nodemailer = require('nodemailer');
 var index = require('./routes/index');
 var localStorage = require('localStorage');
 
+
 /*var users = require('./routes/users');
 */
 var routes = require('./routes/index');
 var userRoutes = require('./routes/user');
 
-
+// localStorage.clear();
 mongoose.connect('localhost:27017/project_cnm');
 require('./config/passport');
 
@@ -53,7 +54,12 @@ app.use(session({
   store: new MongoStore({mongooseConnection: mongoose.connection}),
   cookie: { maxAge:180 * 60 * 1000}
 }));
-
+app.use(function(req, res, next){
+    // if there's a flash message in the session request, make it available in the response, then delete it
+    res.locals.sessionFlash = req.session.sessionFlash;
+    delete req.session.sessionFlash;
+    next();
+});
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());

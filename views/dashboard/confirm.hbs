@@ -37,28 +37,30 @@
     {{/if}}
 </head>
 <body>
-
-
 <div class="wrapper">
-
     <div class="sidebar" data-background-color="white" data-active-color="danger">
+
+    <!--
+		Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black"
+		Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
+	-->
 
     	<div class="sidebar-wrapper">
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text">
-                    Dashboard
+                   Dashboard
                 </a>
             </div>
 
             <ul class="nav">
-                <li class="active">
+                <li>
                     <a href="/user/dashboard">
                         <i class="ti-panel"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li>
-                    <a href="/user/transactions/">
+                    <a href="/user/transactions">
                         <i class="ti-user"></i>
                         <p>Transactions</p>
                     </a>
@@ -68,7 +70,7 @@
     </div>
 
     <div class="main-panel">
-        <nav class="navbar navbar-default">
+		<nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle">
@@ -77,9 +79,9 @@
                         <span class="icon-bar bar2"></span>
                         <span class="icon-bar bar3"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Have a nice day <i class="ti-face-smile"></i></a>
+                    <a class="navbar-brand" href="#">Table List</a>
                 </div>
-                <div class="collapse navbar-collapse">
+                                <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                                                 <li>
                             <a href="/user/logout" >
@@ -95,86 +97,71 @@
         </nav>
 
 
-        <div class="content">
+<div class="content">
             <div class="container-fluid">
-
                 <div class="row">
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="card">
-                            <div class="content">
-                                <div class="row">
-                                    <div class="col-xs-5">
-                                        <div class="icon-big icon-warning text-center">
-                                            <i class="ti-credit-card"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-7">
-                                        <div class="numbers">
-                                            <p>Usable Balance</p>
-                                            ${{usable_balance}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="card">
-                            <div class="content">
-                                <div class="row">
-                                    <div class="col-xs-5">
-                                        <div class="icon-big icon-success text-center">
-                                            <i class="ti-wallet"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-7">
-                                        <div class="numbers">
-                                            <p>Current Balance</p>
-                                            ${{current_balance}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-lg-8 col-md-7">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Your Transaction Address:</h4>
+                                <h4 class="title">Transactions</h4>
                             </div>
                             <div class="content">
-                                <p class="category"><b>{{transaction_address}}</b></p>
-                                <form action="/user/dashboard" method="POST">
-                                <input type="hidden" name="send_address" value="{{transaction_address}}">
+                                {{#each data}}
+                                <form action="/user/confirm" method="POST">
+                                <input type="hidden" name="transaction_id" value="{{this._id}}">
                                 <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                                <div class="form-group">
-                                        <label for="ToAddress">Make a transaction</label>
-                                        <input type="text" class="form-control border-input" name="receive_address" placeholder="To address">
-                                </div>
-                                <div class="form-group">
-                                        <label for="ammount_sent">Amount</label>
-                                        <input type="number" class="form-control border-input" name="amount" placeholder="Ammount">
-                                </div>
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-info btn-fill btn-wd">Send</button>
-                                </div>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label>Sender address</label>
+                                                <input type="text" class="form-control border-input" name="send_address" disabled value="{{this.send_address}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Amount</label>
+                                                <input type="text" class="form-control border-input"  name="amount" disabled value="{{this.amount}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Status</label>
+                                                <input type="email" class="form-control border-input" name="status" disabled value="{{this.status}}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Receiver address</label>
+                                                <input type="text" class="form-control border-input" name="receive_address" disabled value="{{this.receive_address}}">
+                                            </div>
+                                        </div>
+                                        {{!-- <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Last Name</label>
+                                                <input type="text" class="form-control border-input" placeholder="Last Name" value="Faker">
+                                            </div>
+                                        </div> --}}
+                                    </div>
+                                    <div class="text-center">
+
+                                        <button type="submit" class="btn btn-info btn-fill btn-wd">Confirm</button>
+                                        {{!-- <button type="submit" class="btn btn-danger btn-fill btn-wd">Delete</button> --}}
+                                    </div>
+                                    <div class="clearfix"></div>
                                 </form>
-                            </div>
-
-
+                                {{/each}}
                             </div>
                         </div>
                     </div>
 
-                    </div>
-                </div>
 
                 </div>
-
-
             </div>
         </div>
+
         <footer class="footer">
             <div class="container-fluid">
                 <div class="copyright pull-right">
@@ -209,19 +196,6 @@
 	<script src="/javascripts/demo.js"></script>
 
 	<script type="text/javascript">
-    	$(document).ready(function(){
 
-        	demo.initChartist();
-
-        	$.notify({
-            	icon: 'ti-heart',
-            	message: "Hi, <b>{{username}}</b>"
-
-            },{
-                type: 'success',
-                timer: 4000
-            });
-
-    	});
 	</script>
 </html>
