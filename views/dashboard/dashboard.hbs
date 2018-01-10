@@ -34,7 +34,7 @@
     <div class="alert alert-{{ sessionFlash.type }}">
         {{ sessionFlash.message }}
     </div>
-{{/if}}
+    {{/if}}
 </head>
 <body>
 
@@ -46,19 +46,19 @@
     	<div class="sidebar-wrapper">
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text">
-                    {{username}}'s Dashboard
+                    Dashboard
                 </a>
             </div>
 
             <ul class="nav">
                 <li class="active">
-                    <a href="/dashboard">
+                    <a href="/user/dashboard">
                         <i class="ti-panel"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li>
-                    <a href="/transactions/">
+                    <a href="/user/transactions/">
                         <i class="ti-user"></i>
                         <p>Transactions</p>
                     </a>

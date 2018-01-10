@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var csrfProtection = csrf();
 var flash = require('express-flash');
 
+
 router.use(csrfProtection);
 
 // router.get('/profile', function(req,res,next){
@@ -17,25 +18,17 @@ router.use(csrfProtection);
 // });
 router.get('/logout',isLoggedIn, function(req, res,next){
   localStorage.clear();
+ 
   res.redirect('/user/signin');
 });
 
 router.get('/dashboard',isLoggedIn, function(req, res,next){
-  // var id = req.user.transaction_id;
-  // var user_usable_balance = 0;
-  // var user_current_balance = 0;
-  // var transaction = Transaction.findById(req.user.transaction_id,function(err,data){
-  //   user_usable_balance = data.usable_balance;
-  //   user_current_balance = data.real_balance;
-  //   res.render('dashboard/dashboard',{ layout: false,username:req.user.name,usable_balance: user_usable_balance,current_balance: user_current_balance,transaction_address : data.address });
-  // });
-
-
 
   var url  = 'http://localhost:8000/kcoin-api/user-dashboard';
   var data = {
     balance_address: localStorage.getItem('address')
   };
+  console.log(data);
   request.post({url,form:data},function(err,httpResponse,body){
     var datas = JSON.parse(body);
     if (datas.status === 0) {
@@ -90,8 +83,7 @@ router.post('/signin',function(req,res,next){
       return;
     }
     localStorage.setItem('address', JSON.parse(body).data.address);
-    localStorage.setItem('balance_id', JSON.parse(body).data.balance_id);
-    localStorage.setItem('id', JSON.parse(body).data.balance_id);
+
     res.redirect('/user/dashboard');
     
   });
@@ -120,6 +112,29 @@ router.post('/dashboard',function(req,res,next){
   });
 });
 
+router.get('/transactions',isLoggedIn, function(req,res,next){
+  
+  var url  = 'http://localhost:8000/kcoin-api/gettrans';
+  var data = {
+  address : localStorage.getItem('address'),
+  transaction_id : req.body.transaction_id,
+  send_address : req.body.send_address
+  };
+  console.log(data);
+  request.post({url,form:data},function(err,httpResponse,body){
+      var datas = JSON.parse(body);
+      console.log('transs:');
+      console.log(datas.data.transactions);
+  // if (datas.status === 0) {
+  //   req.session.sessionFlash = {
+  //     type: 'danger',
+  //     message: datas.message
+  // }
+  // res.render('dashboard/confirm',{csrfToken: req.csrfToken(),layout:false});
+  // }
+  res.render('dashboard/confirm',{csrfToken: req.csrfToken(),layout:false,data:datas.data.transactions});
+  });
+});
 
 router.get('/forgotpwd', function(req,res,next){
   
@@ -144,8 +159,28 @@ router.post('/forgotpwd',urlencodedParser,function (req,res) {
   });
 });
 
+router.post('/confirm',function (req,res) {
+
+  var url  = 'http://localhost:8000/kcoin-api/confirm-transaction';
+  var data = {
+  email:req.body.email
+  };
+  request.post({url,form:data},function(err,httpResponse,body){
+      var datas = JSON.parse(body);
+  if (datas.status === 0) {
+    req.session.sessionFlash = {
+      type: 'danger',
+      message: datas.message
+  }
+      res.redirect('/user/forgotpwd');
+  }
+  res.redirect('/user/signin');
+  });
+});
+
+
 function isLoggedIn(req, res, next){
-  if(localStorage.getItem('address') && localStorage.getItem('id')){
+  if(localStorage.getItem('address')){
     return next();
   }
   res.redirect('/user/signin');
