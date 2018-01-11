@@ -9,7 +9,7 @@ var urlencodedParser=bodyParser.urlencoded({extended:false});
 var bodyParser = require('body-parser');
 var csrfProtection = csrf();
 var flash = require('express-flash');
-
+var util = require("util");
 
 router.use(csrfProtection);
 
@@ -69,9 +69,103 @@ router.get('/signin',function(req,res,next){
 	res.render('user/signin',{csrfToken: req.csrfToken()});
 });
 
-router.get('/super-dashboard',function(req,res,next){
-	res.render('dashboard/admin/dashboard');
+router.get('/super-dashboard',isLoggedIn,function(req,res,next){
+  var url  = 'http://localhost:8000/kcoin-api/getadmindashboard';
+  var data = {
+    address:localStorage.getItem('address')
+  };
+  console.log(data);
+  request.post({url,form:data},function(err,httpResponse,body){
+    var datas = JSON.parse(body);
+    console.log(datas);
+    if (datas.status == 0) {
+      req.session.sessionFlash = {
+        type: 'danger',
+        message: datas.message
+      }
+      res.redirect('/user/signin');
+        return;
+      }
+    res.render('dashboard/admin/dashboard',{layout:false,number_of_user:datas.data.number_of_user,system_current:datas.data.actual,system_usable:datas.data.available});
+    
+  });
+
 });
+
+router.get('/super-users',isLoggedIn,function(req,res,next){
+  var url  = 'http://localhost:8000/kcoin-api/getuserinfo';
+  var data = {
+    address:localStorage.getItem('address')
+  };
+  console.log(data);
+  request.post({url,form:data},function(err,httpResponse,body){
+    var datas = JSON.parse(body);
+    console.log('Get super user : '+ datas);
+    if (datas.status == 0) {
+      req.session.sessionFlash = {
+        type: 'danger',
+        message: datas.message
+      }
+      res.redirect('/user/signin');
+        return;
+      }
+    res.render('dashboard/admin/users',{layout:false,data:datas.data});
+    
+  });
+
+});
+
+router.get('/super-transactions',isLoggedIn,function(req,res,next){
+  var url  = 'http://localhost:8000/kcoin-api/getalltransactions';
+  var data = {
+    address:localStorage.getItem('address')
+  };
+  console.log(data);
+  request.post({url,form:data},function(err,httpResponse,body){
+    var datas = JSON.parse(body);
+    console.log(datas);
+    if (datas.status == 0) {
+      req.session.sessionFlash = {
+        type: 'danger',
+        message: datas.message
+      }
+      res.redirect('/user/signin');
+        return;
+      }
+    res.render('dashboard/admin/transactions',{layout:false,data:datas.data});
+    
+  });
+
+});
+router.get('/super-balances/',isLoggedIn,function(req,res,next){
+  res.redirect('/user/super-users');
+});
+router.get('/super-balances/:id',isLoggedIn,function(req,res,next){
+
+    var url  = 'http://localhost:8000/kcoin-api/getusertransaction';
+    var data = {
+      id:req.params.id,
+      address:localStorage.getItem('address')
+    };
+    
+    console.log(data);
+    request.post({url,form:data},function(err,httpResponse,body){
+      var datas = JSON.parse(body);
+      console.log('super-balances'+util.inspect(datas.data.transactions));
+      if (datas.status == 0) {
+        req.session.sessionFlash = {
+          type: 'danger',
+          message: datas.message
+        }
+        res.redirect('/user/signin');
+          return;
+        }
+      res.render('dashboard/admin/balances',{layout:false,data:datas.data});
+      
+    }); 
+
+});
+
 
 
 router.post('/signin',function(req,res,next){
@@ -80,6 +174,7 @@ router.post('/signin',function(req,res,next){
     email:req.body.email,
     password:req.body.password
   };
+  console.log(data);
   request.post({url,form:data},function(err,httpResponse,body){
     var datas = JSON.parse(body);
     console.log(datas);
@@ -87,14 +182,13 @@ router.post('/signin',function(req,res,next){
       res.render('user/signin',{csrfToken: req.csrfToken()});
       return;
     }
-    if (datas.is_admin ==1){
-      localStorage.setItem('address', JSON.parse(body).data.address);
-      res.redirect('/user/super-dashboard');
-    }
     localStorage.setItem('address', JSON.parse(body).data.address);
-
-    res.redirect('/user/dashboard');
-    
+    if (datas.data.is_admin){
+      
+      res.redirect('/user/super-dashboard');
+    }else{
+      res.redirect('/user/dashboard');
+    }
   });
 });
 

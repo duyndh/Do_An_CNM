@@ -30,7 +30,7 @@
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
     <link href="/stylesheets/themify-icons.css" rel="stylesheet">
-    {{#if sessionFlash.message}}
+        {{#if sessionFlash.message}}
     <div class="alert alert-{{ sessionFlash.type }}">
         {{ sessionFlash.message }}
     </div>
@@ -59,7 +59,7 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li>
+                <li class="active">
                     <a href="/user/transactions">
                         <i class="ti-user"></i>
                         <p>Awaiting Transactions</p>
