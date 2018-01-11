@@ -35,7 +35,7 @@ router.get('/dashboard',isLoggedIn, function(req, res,next){
       return(false);
     }
 
-      res.render('dashboard/dashboard',{ csrfToken: req.csrfToken(),layout: false,username:datas.data.name,usable_balance: datas.data.usable_balance,current_balance: datas.data.current_balance,transaction_address : datas.data.address});
+      res.render('dashboard/dashboard',{ layout: false,username:datas.data.name,usable_balance: datas.data.usable_balance,current_balance: datas.data.current_balance,transaction_address : datas.data.address});
   });
 
 });
@@ -43,7 +43,7 @@ router.get('/dashboard',isLoggedIn, function(req, res,next){
 
 router.get('/signup', function(req,res,next){
 	var messages = req.flash('error');
-	res.render('user/signup',{csrfToken: req.csrfToken()});
+	res.render('user/signup');
 });
 
 
@@ -57,7 +57,12 @@ router.post('/signup',function(req,res,next){
   request.post({url,form:data},function(err,httpResponse,body){
     var datas = JSON.parse(body);
     if (datas.status === 0) {
+      req.session.sessionFlash = {
+        type: 'danger',
+        message: datas.message
+    }
       res.redirect('/user/signup');
+      return;
     }
     res.redirect('/user/signin');
   });
@@ -66,7 +71,8 @@ router.post('/signup',function(req,res,next){
 
 
 router.get('/signin',function(req,res,next){
-	res.render('user/signin',{csrfToken: req.csrfToken()});
+  var messages = req.flash('error');
+	res.render('user/signin');
 });
 
 router.get('/super-dashboard',isLoggedIn,function(req,res,next){
@@ -179,7 +185,11 @@ router.post('/signin',function(req,res,next){
     var datas = JSON.parse(body);
     console.log(datas);
     if (datas.status == 0) {
-      res.render('user/signin',{csrfToken: req.csrfToken()});
+        req.session.sessionFlash = {
+          type: 'danger',
+          message: datas.message
+      }
+      res.redirect('/user/signin');
       return;
     }
     localStorage.setItem('address', JSON.parse(body).data.address);
@@ -222,23 +232,17 @@ router.get('/transactions',isLoggedIn, function(req,res,next){
   address : localStorage.getItem('address')
   };
   console.log(data);
+
   request.post({url,form:data},function(err,httpResponse,body){
       var datas = JSON.parse(body);
       console.log('transs:');
       console.log(datas.data.transactions);
-  // if (datas.status === 0) {
-  //   req.session.sessionFlash = {
-  //     type: 'danger',
-  //     message: datas.message
-  // }
-  // res.render('dashboard/confirm',{csrfToken: req.csrfToken(),layout:false});
-  // }
-  res.render('dashboard/confirm',{csrfToken: req.csrfToken(),layout:false,data:datas.data.transactions});
+  res.render('dashboard/confirm',{layout:false,data:datas.data.transactions});
   });
 });
 
 router.get('/forgotpwd', function(req,res,next){
-  
+  var messages = req.flash('error');
   res.render('user/forgotpwd');
 });
 
@@ -280,6 +284,7 @@ router.post('/forgotpwd',urlencodedParser,function (req,res) {
       message: datas.message
   }
       res.redirect('/user/forgotpwd');
+      return;
   }
   res.redirect('/user/signin');
   });
@@ -292,6 +297,7 @@ router.post('/confirm',function (req,res) {
     transaction_id:req.body.transaction_id
 
   };
+  console.log(data);
   request.post({url,form:data},function(err,httpResponse,body){
       var datas = JSON.parse(body);
   if (datas.status === 0) {
