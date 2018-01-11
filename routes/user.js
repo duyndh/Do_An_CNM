@@ -11,7 +11,7 @@ var csrfProtection = csrf();
 var flash = require('express-flash');
 var util = require("util");
 
-router.use(csrfProtection);
+//router.use(csrfProtection);
 
 // router.get('/profile', function(req,res,next){
 // 	res.render('user/profile');
@@ -97,6 +97,31 @@ router.get('/super-dashboard',isLoggedIn,function(req,res,next){
   });
 
 });
+
+router.get('/transactions-history',isLoggedIn,function(req,res,next){
+  var url  = 'http://localhost:8000/kcoin-api/get-user-trans';
+  var data = {
+    address:localStorage.getItem('address')
+  };
+  console.log(data);
+  request.post({url,form:data},function(err,httpResponse,body){
+    var datas = JSON.parse(body);
+    console.log('Get user transactions : '+ datas);
+    if (datas.status == 0) {
+      req.session.sessionFlash = {
+        type: 'danger',
+        message: datas.message
+      }
+      res.redirect('/user/dashboard');
+        return;
+      }
+    res.render('dashboard/history',{layout:false,data:datas.data});
+    
+  });
+
+});
+
+
 
 router.get('/super-users',isLoggedIn,function(req,res,next){
   var url  = 'http://localhost:8000/kcoin-api/getuserinfo';
