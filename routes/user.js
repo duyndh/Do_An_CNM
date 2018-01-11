@@ -24,7 +24,7 @@ router.get('/logout',isLoggedIn, function(req, res,next){
 
 router.get('/dashboard',isLoggedIn, function(req, res,next){
 
-  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/user-dashboard';
+  var url  = 'http://localhost:8000/kcoin-api/user-dashboard';
   var data = {
     balance_address: localStorage.getItem('address')
   };
@@ -48,7 +48,7 @@ router.get('/signup', function(req,res,next){
 
 
 router.post('/signup',function(req,res,next){
-  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/register';
+  var url  = 'http://localhost:8000/kcoin-api/register';
   var data = {
     email:req.body.email,
     name:req.body.name,
@@ -69,8 +69,13 @@ router.get('/signin',function(req,res,next){
 	res.render('user/signin',{csrfToken: req.csrfToken()});
 });
 
+router.get('/super-dashboard',function(req,res,next){
+	res.render('dashboard/admin/dashboard');
+});
+
+
 router.post('/signin',function(req,res,next){
-  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/signin';
+  var url  = 'http://localhost:8000/kcoin-api/signin';
   var data = {
     email:req.body.email,
     password:req.body.password
@@ -82,6 +87,10 @@ router.post('/signin',function(req,res,next){
       res.render('user/signin',{csrfToken: req.csrfToken()});
       return;
     }
+    if (datas.is_admin ==1){
+      localStorage.setItem('address', JSON.parse(body).data.address);
+      res.redirect('/user/super-dashboard');
+    }
     localStorage.setItem('address', JSON.parse(body).data.address);
 
     res.redirect('/user/dashboard');
@@ -90,7 +99,7 @@ router.post('/signin',function(req,res,next){
 });
 
 router.post('/dashboard',function(req,res,next){
-  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/create-transaction';
+  var url  = 'http://localhost:8000/kcoin-api/create-transaction';
   var data = {
     send_address:req.body.send_address,
     receive_address:req.body.receive_address,
@@ -114,11 +123,9 @@ router.post('/dashboard',function(req,res,next){
 
 router.get('/transactions',isLoggedIn, function(req,res,next){
   
-  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/gettrans';
+  var url  = 'http://localhost:8000/kcoin-api/gettrans';
   var data = {
-  address : localStorage.getItem('address'),
-  transaction_id : req.body.transaction_id,
-  send_address : req.body.send_address
+  address : localStorage.getItem('address')
   };
   console.log(data);
   request.post({url,form:data},function(err,httpResponse,body){
@@ -140,9 +147,34 @@ router.get('/forgotpwd', function(req,res,next){
   
   res.render('user/forgotpwd');
 });
+
+router.get('/user-confirm/:trans_id', function(req,res,next){
+  
+  res.render('user/user-confirm',{trans_id:req.param.trans_id});
+});
+
+router.post('/user-confirm', function(req,res,next){
+  var url  = 'http://localhost:8000/kcoin-api/confirm-transaction';
+  var data = {
+  password:req.body.password,
+  transaction_id : req.body.transaction_id
+  };
+  request.post({url,form:data},function(err,httpResponse,body){
+  var datas = JSON.parse(body);
+  if (datas.status === 0) {
+    req.session.sessionFlash = {
+      type: 'danger',
+      message: datas.message
+    }
+      res.redirect('/user/user-confirm/'+req.body.transaction_id);
+  }
+  res.redirect('/user/dashboard');
+  });
+});
+
 router.post('/forgotpwd',urlencodedParser,function (req,res) {
 
-  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/forgotpwd';
+  var url  = 'http://localhost:8000/kcoin-api/forgotpwd';
   var data = {
   email:req.body.email
   };
@@ -161,9 +193,10 @@ router.post('/forgotpwd',urlencodedParser,function (req,res) {
 
 router.post('/confirm',function (req,res) {
 
-  var url  = 'https://fathomless-headland-51949.herokuapp.com/kcoin-api/confirm-transaction';
+  var url  = 'http://localhost:8000/kcoin-api/delete-transaction';
   var data = {
-  email:req.body.email
+    transaction_id:req.body.transaction_id
+
   };
   request.post({url,form:data},function(err,httpResponse,body){
       var datas = JSON.parse(body);
@@ -172,9 +205,9 @@ router.post('/confirm',function (req,res) {
       type: 'danger',
       message: datas.message
   }
-      res.redirect('/user/forgotpwd');
+      res.redirect('/user/dashboard');
   }
-  res.redirect('/user/signin');
+  res.redirect('/user/confirm');
   });
 });
 

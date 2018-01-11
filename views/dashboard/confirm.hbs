@@ -62,7 +62,7 @@
                 <li>
                     <a href="/user/transactions">
                         <i class="ti-user"></i>
-                        <p>Transactions</p>
+                        <p>Awaiting Transactions</p>
                     </a>
                 </li>
             </ul>
@@ -79,7 +79,7 @@
                         <span class="icon-bar bar2"></span>
                         <span class="icon-bar bar3"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Table List</a>
+                    <a class="navbar-brand" href="#">Awaiting Transactions</a>
                 </div>
                                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -100,13 +100,14 @@
 <div class="content">
             <div class="container-fluid">
                 <div class="row">
+                    {{#each data}}
                     <div class="col-lg-8 col-md-7">
                         <div class="card">
                             <div class="header">
-                                <h4 class="title">Transactions</h4>
+                                <h4 class="title">Transaction</h4>
                             </div>
                             <div class="content">
-                                {{#each data}}
+                                
                                 <form action="/user/confirm" method="POST">
                                 <input type="hidden" name="transaction_id" value="{{this._id}}">
                                 <input type="hidden" name="_csrf" value="{{csrfToken}}">
@@ -146,18 +147,15 @@
                                         </div> --}}
                                     </div>
                                     <div class="text-center">
-
-                                        <button type="submit" class="btn btn-info btn-fill btn-wd">Confirm</button>
-                                        {{!-- <button type="submit" class="btn btn-danger btn-fill btn-wd">Delete</button> --}}
+                                        <button type="submit" class="btn btn-danger btn-fill btn-wd">Delete</button>
                                     </div>
                                     <div class="clearfix"></div>
                                 </form>
-                                {{/each}}
                             </div>
                         </div>
                     </div>
 
-
+{{/each}}
                 </div>
             </div>
         </div>
