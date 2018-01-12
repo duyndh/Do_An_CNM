@@ -23,7 +23,9 @@ var routes = require('./routes/index');
 var userRoutes = require('./routes/user');
 
 // localStorage.clear();
-mongoose.connect('localhost:27017/project_cnm');
+//mongoose.connect('localhost:27017/project_cnm');
+mongoose.connect('mongodb://root:root@ds237717.mlab.com:37717/project_cnm');
+
 require('./config/passport');
 
 var db = mongoose.connection;
