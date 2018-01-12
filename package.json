@@ -21,6 +21,7 @@
     "express-jquery": "^1.8.3",
     "express-session": "^1.15.6",
     "express-validator": "^4.3.0",
+    "handlebars-helpers": "^0.10.0",
     "hbs": "~4.0.1",
     "jquery": "^3.2.1",
     "localStorage": "^1.0.3",

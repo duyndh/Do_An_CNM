@@ -262,7 +262,12 @@ router.get('/transactions',isLoggedIn, function(req,res,next){
       var datas = JSON.parse(body);
       console.log('transs:');
       console.log(datas.data.transactions);
-  res.render('dashboard/confirm',{layout:false,data:datas.data.transactions});
+  res.render('dashboard/confirm',{layout:false,data:datas.data.transactions,helpers: {
+            if_eq: function(a, b, opts) { if(a == b)
+            return opts.fn(this);
+        else
+            return opts.inverse(this); }
+}});
   });
 });
 
@@ -272,15 +277,16 @@ router.get('/forgotpwd', function(req,res,next){
 });
 
 router.get('/user-confirm/:trans_id', function(req,res,next){
-  
-  res.render('user/user-confirm',{trans_id:req.param.trans_id});
+  console.log(req.params.trans_id);
+  res.render('user/user-confirm',{transaction_id:req.params.trans_id});
 });
 
 router.post('/user-confirm', function(req,res,next){
   var url  = 'http://localhost:8000/kcoin-api/confirm-transaction';
   var data = {
   password:req.body.password,
-  transaction_id : req.body.transaction_id
+  transaction_id : req.body.transaction_id,
+  code : req.body.code
   };
   request.post({url,form:data},function(err,httpResponse,body){
   var datas = JSON.parse(body);
@@ -289,9 +295,15 @@ router.post('/user-confirm', function(req,res,next){
       type: 'danger',
       message: datas.message
     }
-      res.redirect('/user/user-confirm/'+req.body.transaction_id);
+      res.redirect('/user/signin/');
+  }else{
+    req.session.sessionFlash = {
+      type: 'success',
+      message: datas.message
+    }
+    res.redirect('/user/signin');
   }
-  res.redirect('/user/dashboard');
+  
   });
 });
 
@@ -332,7 +344,7 @@ router.post('/confirm',function (req,res) {
   }
       res.redirect('/user/dashboard');
   }
-  res.redirect('/user/confirm');
+  res.redirect('/user/dashboard');
   });
 });
 

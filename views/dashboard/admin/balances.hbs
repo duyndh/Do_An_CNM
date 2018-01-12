@@ -69,13 +69,13 @@
                 </li>
                 <li>
                     <a href="/user/super-transactions">
-                        <i class="ti-user"></i>
+                        <i class="ti-world"></i>
                         <p>Transactions</p>
                     </a>
                 </li>
                 <li class="active">
                     <a href="/user/super-balances">
-                        <i class="ti-user"></i>
+                        <i class="ti-money"></i>
                         <p>Balances</p>
                     </a>
                 </li>
@@ -132,9 +132,9 @@
                                     <tbody>
                                         {{#each data.transactions}}
                                         <tr>
-                                        	<th>Transaction ID: {{this._id}}</th>
-                                            <th>Amount: {{this.amount}}</th>
-                                            <th>Status: {{this.status}}</th>
+                                        	<th>{{this._id}}</th>
+                                            <th>{{this.amount}}</th>
+                                            <th>{{this.status}}</th>
                                         </tr>
                                         {{/each}}
                                        

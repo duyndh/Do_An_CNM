@@ -15,7 +15,7 @@ var MongoStore = require('connect-mongo')(session);
 var nodemailer = require('nodemailer');
 var index = require('./routes/index');
 var localStorage = require('localStorage');
-
+var helpers = require('handlebars-helpers')();
 
 /*var users = require('./routes/users');
 */
